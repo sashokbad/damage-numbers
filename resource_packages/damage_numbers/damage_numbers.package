@@ -1,0 +1,11 @@
+mod = [
+	"damage_numbers"
+]
+
+package = [
+	"resource_packages/damage_numbers/damage_numbers"
+]
+
+lua = [
+	"scripts/mods/damage_numbers/*"
+]
