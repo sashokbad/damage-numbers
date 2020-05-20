@@ -38,47 +38,47 @@ end
 -- ours formats the damage instead of just multiplying it by 100.
 local function hook_event_add_damage_number(func, self, damage, size, unit, time, color, is_critical_strike)
   local camera_position = Camera.world_position(self.camera)
-	local unit_position = Unit.world_position(unit, 0)
-	local cam_to_unit_dir = Vector3.normalize(unit_position - camera_position)
-	local cam_direction = Quaternion.forward(Camera.world_rotation(self.camera))
-	local forward_dot = Vector3.dot(cam_direction, cam_to_unit_dir)
-	local is_infront = forward_dot >= 0 and forward_dot <= 1
+  local unit_position = Unit.world_position(unit, 0)
+  local cam_to_unit_dir = Vector3.normalize(unit_position - camera_position)
+  local cam_direction = Quaternion.forward(Camera.world_rotation(self.camera))
+  local forward_dot = Vector3.dot(cam_direction, cam_to_unit_dir)
+  local is_infront = forward_dot >= 0 and forward_dot <= 1
 
-	if is_infront then
-		local size = size or 1
-		local color = color or Vector3(255, 255, 255)
-		local new_text = {
-			floating_speed = 150,
-			alpha = 255,
+  if is_infront then
+    local size = size or 1
+    local color = color or Vector3(255, 255, 255)
+    local new_text = {
+      floating_speed = 150,
+      alpha = 255,
       size = size,
       -- this line is the one that's different, format to 2 decimal places
-			text = string.format('%.2f', damage),
-			color = {
-				255,
-				color.x,
-				color.y,
-				color.z
-			},
-			time = self._time + (time or self._unit_text_time),
-			starting_time = self._time,
-			random_x_offset = math.random(-60, 60),
-			random_y_offset = math.random(-40, 40),
-			is_critical_strike = is_critical_strike
-		}
-		self._unit_texts[unit] = self._unit_texts[unit] or {}
-		self._unit_texts[unit][#self._unit_texts[unit] + 1] = new_text
-	end
+      text = string.format('%.2f', damage),
+      color = {
+        255,
+        color.x,
+        color.y,
+        color.z
+      },
+      time = self._time + (time or self._unit_text_time),
+      starting_time = self._time,
+      random_x_offset = math.random(-60, 60),
+      random_y_offset = math.random(-40, 40),
+      is_critical_strike = is_critical_strike
+    }
+    self._unit_texts[unit] = self._unit_texts[unit] or {}
+    self._unit_texts[unit][#self._unit_texts[unit] + 1] = new_text
+  end
 end
 
 mod:hook(DamageNumbersUI, 'event_add_damage_number', hook_event_add_damage_number)
 
 -- Check whether the attacker is one that we want to show damage for.
 local function is_valid_source(attacker_unit)
-	if mod:get('show_all_damage') then
-		return true
-	else
-		return Managers.player:local_player().player_unit == attacker_unit
-	end
+  if mod:get('show_all_damage') then
+    return true
+  else
+    return Managers.player:local_player().player_unit == attacker_unit
+  end
 end
 
 --- Called when the unit takes damage.
