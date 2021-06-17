@@ -1,8 +1,8 @@
 -- Damage Numbers
 -- A mod for Vermintide 2
 -- Made by OrangeChris
--- Version 1.1
--- Last updated for Vermintide 2 version 2.4 on 2020-05-20
+-- Version 1.2
+-- Last updated for Vermintide 2 version 4.4.0.3 on 2021-06-17
 
 local mod = get_mod('damage_numbers')
 
@@ -35,7 +35,7 @@ local function get_damage_color(damage, damage_type)
 end
 
 --- A copy of DamageNumbersUI#event_add_damage_number. The only difference is
--- ours formats the damage instead of just multiplying it by 100.
+-- ours formats the damage.
 local function hook_event_add_damage_number(func, self, damage, size, unit, time, color, is_critical_strike)
   local camera_position = Camera.world_position(self.camera)
   local unit_position = Unit.world_position(unit, 0)
@@ -52,7 +52,7 @@ local function hook_event_add_damage_number(func, self, damage, size, unit, time
       alpha = 255,
       size = size,
       -- this line is the one that's different, format to 2 decimal places
-      text = string.format('%.2f', damage),
+      text = string.format('%.2f', damage * 100),
       color = {
         255,
         color.x,
@@ -96,7 +96,8 @@ local function hook_add_damage(func, self, attacker_unit, damage_amount, hit_zon
     local duration = 2.2
     local color = get_damage_color(damage_amount, damage_type)
     local is_critical_strike = select(7, ...)
-    Managers.state.event:trigger('add_damage_number', actual_damage, text_size, unit, duration, color, is_critical_strike)
+    -- We still divide by 100 here because that's what TrainingDummyHealthExtension does
+    Managers.state.event:trigger('add_damage_number', actual_damage / 100, text_size, unit, duration, color, is_critical_strike)
   end
 
   return func(self, attacker_unit, damage_amount, hit_zone_name, damage_type, ...)
