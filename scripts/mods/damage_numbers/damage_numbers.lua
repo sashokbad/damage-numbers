@@ -1,7 +1,7 @@
 -- Damage Numbers
 -- A mod for Vermintide 2
 -- Made by OrangeChris
--- Version 1.2
+-- Version 1.3
 -- Last updated for Vermintide 2 version 5.5.6 on 2024-06-12
 
 local mod = get_mod('damage_numbers')
